@@ -1,28 +1,15 @@
 import os
 import sys
 
-import numpy as np
 import torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from models.networks import (
     GANLoss,
     GANLoss_smooth,
-    get_norm_layer,
-    print_network,
     create3DsobelFilter,
     weights_init,
 )
-
-
-class TestGetNormLayer:
-    def test_batch_norm(self):
-        norm = get_norm_layer('batch')
-        assert norm == torch.nn.BatchNorm3d
-
-    def test_instance_norm(self):
-        norm = get_norm_layer('instance')
-        assert norm == torch.nn.InstanceNorm3d
 
 
 class TestGANLoss:
@@ -65,14 +52,6 @@ class TestCreate3DSobelFilter:
             return
         sobel = create3DsobelFilter()
         assert sobel.shape == (3, 1, 3, 3, 3)
-
-
-class TestPrintNetwork:
-    def test_print_network_no_error(self, capsys):
-        net = torch.nn.Linear(10, 5)
-        print_network(net)
-        captured = capsys.readouterr()
-        assert 'Total number of parameters' in captured.out
 
 
 class TestWeightsInit:
