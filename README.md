@@ -62,12 +62,19 @@ uv run python test.py \
 ### Time Predictor
 
 ```bash
-uv run python train_time.py \
+# Train
+uv run python train.py \
   --dataroot <dataroot>/brain_data/standard_preprocessed/pairing \
   --name time_pred --model time_predictor \
   --which_direction AtoB --lambda_A 1.0 --dataset_mode aligned_time \
   --use_dropout --batchSize 1 --niter 100 --niter_decay 100 \
   --lambda_sobel 1.0 --fineSize 128 --lr 0.00002 --beta1 0.65
+
+# Test
+uv run python test_time.py \
+  --dataroot <dataroot>/brain_data/standard_preprocessed/pairing \
+  --name time_pred --model time_predictor \
+  --dataset_mode aligned_time
 ```
 
 ### gEa-GAN + TPN

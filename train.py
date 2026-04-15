@@ -32,7 +32,7 @@ for epoch in range(1, opt.niter + opt.niter_decay + 1):
             t = (time.time() - iter_start_time) / opt.batchSize
             visualizer.print_current_errors(epoch, epoch_iter, errors, t)
             if opt.display_id > 0:
-                visualizer.plot_current_errors(epoch, float(epoch_iter)/dataset_size, opt, errors)
+                visualizer.plot_current_errors(epoch, float(epoch_iter) / dataset_size, opt, errors)
 
         if total_steps % opt.save_latest_freq == 0:
             print('saving the latest model (epoch %d, total_steps %d)' %
@@ -54,5 +54,5 @@ for epoch in range(1, opt.niter + opt.niter_decay + 1):
     if epoch > opt.niter:
         model.update_learning_rate()
 
-    if opt.model == 'gea_TPN' and opt.TPN:
+    if hasattr(model, 'update_current_gamma'):
         model.update_current_gamma(epoch)
