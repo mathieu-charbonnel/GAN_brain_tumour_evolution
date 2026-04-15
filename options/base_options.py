@@ -3,7 +3,7 @@ import os
 from util import util
 
 
-class BaseOptions():
+class BaseOptions:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
         self.initialized = False
@@ -41,13 +41,11 @@ class BaseOptions():
         self.parser.add_argument('--rise_sobelLoss', action='store_true', help='indicate to rise sobel lambda')
         self.parser.add_argument('--labelSmooth', action='store_true', help='indicate to use label smoothing')
 
-        #for time predictor
         self.parser.add_argument('--init_type', type=str, default='normal', help='network initialization [normal | xavier | kaiming | orthogonal]')
         self.parser.add_argument('--init_gain', type=float, default=0.02, help='scaling factor for normal, xavier and orthogonal.')
 
         self.initialized = True
 
-        #for gea TPN
         self.parser.add_argument('--TPN', type=str, default=None, help='Use the Time Prediction Network (TPN), and load specified model')
 
 
@@ -60,9 +58,9 @@ class BaseOptions():
         str_ids = self.opt.gpu_ids.split(',')
         self.opt.gpu_ids = []
         for str_id in str_ids:
-            id = int(str_id)
-            if id >= 0:
-                self.opt.gpu_ids.append(id)
+            gpu_id = int(str_id)
+            if gpu_id >= 0:
+                self.opt.gpu_ids.append(gpu_id)
 
         args = vars(self.opt)
 

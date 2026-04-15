@@ -1,11 +1,14 @@
-import numpy as np
-import os
 import ntpath
+import os
 import time
-from . import util
-from . import html
 
-class Visualizer():
+import numpy as np
+
+from . import html
+from . import util
+
+
+class Visualizer:
     def __init__(self, opt):
         # self.opt = opt
         self.display_id = opt.display_id
@@ -26,12 +29,7 @@ class Visualizer():
             now = time.strftime("%c")
             log_file.write('================ Training Loss (%s) ================\n' % now)
 
-    # |visuals|: dictionary of images to display or save
     def display_current_results(self, visuals, epoch):
-        if self.display_id > 0: # show images in the browser
-            idx = 1
-
-
         if self.use_html: # save images to a html file
             for label, image_numpy in visuals.items():
                 img_path = os.path.join(self.img_dir, 'epoch%.3d_%s.png' % (epoch, label))
@@ -52,7 +50,6 @@ class Visualizer():
                 webpage.add_images(ims, txts, links, width=self.win_size)
             webpage.save()
 
-    # errors: dictionary of error labels and values
     def plot_current_errors(self, epoch, counter_ratio, opt, errors):
         if not hasattr(self, 'plot_data'):
             self.plot_data = {'X':[],'Y':[], 'legend':list(errors.keys())}
@@ -69,7 +66,6 @@ class Visualizer():
             win=self.display_id)
 
 
-    # errors: same format as |errors| of plotCurrentErrors
     def print_current_errors(self, epoch, i, errors, t):
         message = '(epoch: %d, iters: %d, time: %.3f) ' % (epoch, i, t)
         for k, v in errors.items():
@@ -79,7 +75,6 @@ class Visualizer():
         with open(self.log_name, "a") as log_file:
             log_file.write('%s\n' % message)
 
-    # save image to the disk
     def save_images(self, webpage, visuals, image_path):
         image_dir = webpage.get_image_dir()
         short_path = ntpath.basename(image_path[0])

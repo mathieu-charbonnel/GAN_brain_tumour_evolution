@@ -1,55 +1,45 @@
-from __future__ import print_function
-import torch
-import numpy as np
-from PIL import Image
-import inspect, re
-import numpy as np
 import os
-import collections
+from typing import List, Union
+
+import numpy as np
 import SimpleITK as sitk
 import scipy.io as sio
+import torch
 
-# Converts a Tensor into a Numpy array
-# |imtype|: the desired type of the converted numpy array
-def tensor2im(image_tensor, imtype=np.uint8):
-#    image_numpy = image_tensor.cpu().float().numpy()[0,0,30:33,:,:]
-    image_numpy = image_tensor.cpu().float().numpy()[0,0,60:66,:,:]
+
+def tensor2im(image_tensor: torch.Tensor, imtype: type = np.uint8) -> np.ndarray:
+    image_numpy = image_tensor.cpu().float().numpy()[0, 0, 60:66, :, :]
     image_numpy = (image_numpy + 1) / 2.00 * 255.0
     return image_numpy.astype(imtype)
 
-def tensor2im_co(image_tensor, imtype=np.uint8):
-#    image_numpy = image_tensor.cpu().float().numpy()[0,0,:,30:33,:]
-    image_numpy = image_tensor.cpu().float().numpy()[0,0,:,60:66,:]
-    image_numpy= np.transpose(image_numpy, (1, 0, 2))
-    image_numpy = (image_numpy + 1) / 2.00 * 255.0
-    image_numpy= np.flip(image_numpy,axis=1)
-    return image_numpy.astype(imtype)
 
-def tensor2im_sa(image_tensor, imtype=np.uint8):
-#    image_numpy = image_tensor.cpu().float().numpy()[0,0,:,:,30:33]
-    image_numpy = image_tensor.cpu().float().numpy()[0,0,:,:,60:66]
-    image_numpy= np.transpose(image_numpy, (2, 1, 0))
+def tensor2im_co(image_tensor: torch.Tensor, imtype: type = np.uint8) -> np.ndarray:
+    image_numpy = image_tensor.cpu().float().numpy()[0, 0, :, 60:66, :]
+    image_numpy = np.transpose(image_numpy, (1, 0, 2))
     image_numpy = (image_numpy + 1) / 2.00 * 255.0
-    image_numpy=np.rot90(image_numpy,axes=(1, 2))
+    image_numpy = np.flip(image_numpy, axis=1)
     return image_numpy.astype(imtype)
 
 
+def tensor2im_sa(image_tensor: torch.Tensor, imtype: type = np.uint8) -> np.ndarray:
+    image_numpy = image_tensor.cpu().float().numpy()[0, 0, :, :, 60:66]
+    image_numpy = np.transpose(image_numpy, (2, 1, 0))
+    image_numpy = (image_numpy + 1) / 2.00 * 255.0
+    image_numpy = np.rot90(image_numpy, axes=(1, 2))
+    return image_numpy.astype(imtype)
 
-def tensor2array(image_tensor):
+
+def tensor2array(image_tensor: torch.Tensor) -> np.ndarray:
     image_numpy = image_tensor.cpu().numpy()
-#    image_numpy = (image_numpy + 1) / 2.00 * 255.0
-    # print(image_numpy.shape)
-    # img_numpy = np.array(image_numpy).reshape((1,1,64,64,64))[0,0,:,:,:]
-    return image_numpy[0,0,:,:,:]
+    return image_numpy[0, 0, :, :, :]
 
-def tensor2array_labels(image_tensor):
+
+def tensor2array_labels(image_tensor: torch.Tensor) -> np.ndarray:
     image_numpy = image_tensor.cpu().numpy()
-    # print(image_numpy.shape)
-    # img_numpy = np.array(image_numpy).reshape((1,1,64,64,64))[0,0,:,:,:]
-    return image_numpy[0,:,:,:,:]
+    return image_numpy[0, :, :, :, :]
 
 
-def diagnose_network(net, name='network'):
+def diagnose_network(net: torch.nn.Module, name: str = 'network') -> None:
     mean = 0.0
     count = 0
     for param in net.parameters():
@@ -62,36 +52,16 @@ def diagnose_network(net, name='network'):
     print(mean)
 
 
-def save_image(image_numpy, image_path):
-
-    savImg = sitk.GetImageFromArray(image_numpy[:,:,:])
-    sitk.WriteImage(savImg, image_path)
-    # savImg = sitk.GetImageFromArray(image_numpy[1,:,:,:])
-    # sitk.WriteImage(image_path, eachPath +'/' + fn +'_2n_fake.nii.gz')
-    # savImg = sitk.GetImageFromArray(image_numpy[2,:,:,:])
-    # sitk.WriteImage(image_path, eachPath +'/' + fn +'_4n_fake.nii.gz')
-def save_labels(image_numpy, image_path):
+def save_image(image_numpy: np.ndarray, image_path: str) -> None:
+    sav_img = sitk.GetImageFromArray(image_numpy[:, :, :])
+    sitk.WriteImage(sav_img, image_path)
 
 
-    sio.savemat(image_path, {'label':image_numpy})
+def save_labels(image_numpy: np.ndarray, image_path: str) -> None:
+    sio.savemat(image_path, {'label': image_numpy})
 
-def info(object, spacing=10, collapse=1):
-    """Print methods and doc strings.
-    Takes module, class, list, dictionary, or string."""
-    methodList = [e for e in dir(object) if isinstance(getattr(object, e), collections.Callable)]
-    processFunc = collapse and (lambda s: " ".join(s.split())) or (lambda s: s)
-    print( "\n".join(["%s %s" %
-                     (method.ljust(spacing),
-                      processFunc(str(getattr(object, method).__doc__)))
-                     for method in methodList]) )
 
-def varname(p):
-    for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
-        m = re.search(r'\bvarname\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', line)
-        if m:
-            return m.group(1)
-
-def print_numpy(x, val=True, shp=False):
+def print_numpy(x: np.ndarray, val: bool = True, shp: bool = False) -> None:
     x = x.astype(np.float64)
     if shp:
         print('shape,', x.shape)
@@ -101,7 +71,7 @@ def print_numpy(x, val=True, shp=False):
             np.mean(x), np.min(x), np.max(x), np.median(x), np.std(x)))
 
 
-def mkdirs(paths):
+def mkdirs(paths: Union[List[str], str]) -> None:
     if isinstance(paths, list) and not isinstance(paths, str):
         for path in paths:
             mkdir(path)
@@ -109,6 +79,6 @@ def mkdirs(paths):
         mkdir(paths)
 
 
-def mkdir(path):
+def mkdir(path: str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)

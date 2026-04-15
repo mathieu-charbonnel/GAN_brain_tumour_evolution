@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gan-brain-tumour-evolution"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "torchvision",
+    "scikit-image",
+    "SimpleITK",
+    "numpy",
+    "dominate",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[tool.uv.extra-build-dependencies]
+visdom = ["setuptools"]
+
+[tool.setuptools.packages.find]
+include = ["models*", "data*", "util*", "options*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

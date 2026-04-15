@@ -1,28 +1,24 @@
+from models.base_model import BaseModel
 
-def create_model(opt):
+
+def create_model(opt) -> BaseModel:
     model = None
     print(opt.model)
     if opt.model == 'gea_gan':
-        # assert(opt.dataset_mode == 'aligned')
-        from .gea_gan_model import gea_ganModel
-        model = gea_ganModel()
+        from .gea_gan_model import GeaGanModel
+        model = GeaGanModel()
     elif opt.model == 'dea_gan':
-        # assert(opt.dataset_mode == 'aligned')
-        from .dea_gan_model import dea_ganModel
-        model = dea_ganModel()
+        from .dea_gan_model import DeaGanModel
+        model = DeaGanModel()
     elif opt.model == 'time_predictor':
-        # assert(opt.dataset_mode == 'aligned')
         from .time_predictor_model import TimePredictorModel
         model = TimePredictorModel()
     elif opt.model == 'gea_TPN':
-        # assert(opt.dataset_mode == 'aligned')
-        from .gea_gan_model_TPN import gea_ganModelTPN
-        model = gea_ganModelTPN()
+        from .gea_gan_model_TPN import GeaGanModelTPN
+        model = GeaGanModelTPN()
     elif opt.model == 'gea_DM':
-        # assert(opt.dataset_mode == 'aligned')
-        from .gea_gan_model_DM import gea_ganModelDM
-        model = gea_ganModelDM()
-
+        from .gea_gan_model_DM import GeaGanModelDM
+        model = GeaGanModelDM()
     else:
         raise ValueError("Model [%s] not recognized." % opt.model)
     model.initialize(opt)

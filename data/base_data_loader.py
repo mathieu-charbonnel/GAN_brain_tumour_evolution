@@ -1,14 +1,13 @@
+from typing import Optional
 
-class BaseDataLoader():
-    def __init__(self):
+
+class BaseDataLoader:
+    def __init__(self) -> None:
         pass
-    
-    def initialize(self, opt):
+
+    def initialize(self, opt) -> None:
         self.opt = opt
-        pass
 
-    def load_data():
+    def load_data(self) -> Optional[object]:
         return None
 
-        
-        

@@ -1,25 +1,28 @@
 import torch.utils.data
 from data.base_data_loader import BaseDataLoader
+from data.aligned_dataset import (
+    AlignedDataset,
+    AlignedDatasetDM,
+    AlignedDatasetTPN,
+    AlignedDatasetTime,
+)
+
+_DATASET_MAP = {
+    'aligned': AlignedDataset,
+    'aligned_time': AlignedDatasetTime,
+    'aligned_TPN': AlignedDatasetTPN,
+    'aligned_DM': AlignedDatasetDM,
+}
 
 
 def CreateDataset(opt):
-    dataset = None
-    if opt.dataset_mode == 'aligned':
-        from data.aligned_dataset import AlignedDataset
-        dataset = AlignedDataset()
-    elif opt.dataset_mode == 'aligned_time':
-        from data.aligned_dataset_time import AlignedDatasetTime
-        dataset = AlignedDatasetTime()
-    elif opt.dataset_mode == 'aligned_TPN':
-        from data.aligned_dataset_TPN import AlignedDatasetTPN
-        dataset = AlignedDatasetTPN()
-    elif opt.dataset_mode == 'aligned_DM':
-        from data.aligned_dataset_DM import AlignedDatasetDM
-        dataset = AlignedDatasetDM()
+    dataset_cls = _DATASET_MAP.get(opt.dataset_mode)
+    if dataset_cls is None:
+        raise ValueError("Dataset mode [%s] not recognized." % opt.dataset_mode)
+    dataset = dataset_cls()
     print("dataset [%s] was created" % (dataset.name()))
     dataset.initialize(opt)
     return dataset
-
 
 
 class CustomDatasetDataLoader(BaseDataLoader):

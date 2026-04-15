@@ -21,6 +21,4 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--pool_size', type=int, default=4, help='the size of image buffer that stores previously generated images')
         self.parser.add_argument('--no_html', action='store_true', help='do not save intermediate training results to [opt.checkpoints_dir]/[opt.name]/web/')
         self.isTrain = True
-        #for gea TPN
-        self.parser.add_argument('--lambda_L2', type=float, default=0.0, help='weight for tumour tissue over rest of brain. Range [0,1]')
         self.parser.add_argument('--gamma', type=float, default=1.0, help='weight for time loss, when TPN is set to True')

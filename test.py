@@ -1,10 +1,9 @@
-import time
 import os
+
 from options.test_options import TestOptions
 from data.data_loader import CreateDataLoader
 from models.models import create_model
 from util.visualizer import Visualizer
-from pdb import set_trace as st
 from util import html
 
 opt = TestOptions().parse()
@@ -32,8 +31,6 @@ for i, data in enumerate(dataset):
     visuals = model.get_current_visuals()
     img_path = model.get_image_paths()
     print('process image... %s' % img_path)
-#    visualizer.save_images(webpage, visuals, img_path)
-#    visualizer.save_images(model.get_current_img(), epoch)
     visualizer.save_images_png(webpage, model.get_current_img(), img_path)
 
 webpage.save()

@@ -18,18 +18,16 @@ import os
 from options.test_options import TestOptions
 from data.data_loader import CreateDataLoader
 from models.models import create_model
-from util.visualizer import Visualizer
-#from util.visualizer import save_images
 from util import html
 import torch
 
 def predict_time(opt=None, dataset=None, model=None):
 
-    if dataset == None:
-        dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
-    if model == None:
-        model = create_model(opt)      # create a model given opt.model and other options
-        model.setup(opt)               # regular setup: load and print networks; create schedulers
+    if dataset is None:
+        dataset = create_dataset(opt)
+    if model is None:
+        model = create_model(opt)
+        model.setup(opt)
 
     # Create matrix to hold predictions:
     predictions = torch.zeros(min(opt.num_test, len(dataset)))

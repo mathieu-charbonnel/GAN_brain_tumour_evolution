@@ -1,16 +1,17 @@
 import random
-import numpy as np
+from typing import List
+
 import torch
-from pdb import set_trace as st
-from torch.autograd import Variable
-class ImagePool():
-    def __init__(self, pool_size):
+
+
+class ImagePool:
+    def __init__(self, pool_size: int) -> None:
         self.pool_size = pool_size
         if self.pool_size > 0:
             self.num_imgs = 0
-            self.images = []
+            self.images: List[torch.Tensor] = []
 
-    def query(self, images):
+    def query(self, images: torch.Tensor) -> torch.Tensor:
         if self.pool_size == 0:
             return images
         return_images = []
@@ -23,11 +24,10 @@ class ImagePool():
             else:
                 p = random.uniform(0, 1)
                 if p > 0.5:
-                    random_id = random.randint(0, self.pool_size-1)
+                    random_id = random.randint(0, self.pool_size - 1)
                     tmp = self.images[random_id].clone()
                     self.images[random_id] = image
                     return_images.append(tmp)
                 else:
                     return_images.append(image)
-        return_images = Variable(torch.cat(return_images, 0))
-        return return_images
+        return torch.cat(return_images, 0)
