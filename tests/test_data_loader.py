@@ -5,18 +5,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from data.base_data_loader import BaseDataLoader
 
 
+class FakeOpt:
+    pass
+
+
 class TestBaseDataLoaderInit:
     def test_load_data_default_none(self):
-        loader = BaseDataLoader()
+        loader = BaseDataLoader(FakeOpt())
         assert loader.load_data() is None
 
-    def test_initialize_sets_opt(self):
-        loader = BaseDataLoader()
-
-        class FakeOpt:
-            pass
-
+    def test_init_sets_opt(self):
         opt = FakeOpt()
-        loader.initialize(opt)
+        loader = BaseDataLoader(opt)
         assert hasattr(loader, 'opt')
         assert loader.opt is opt

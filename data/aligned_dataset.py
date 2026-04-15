@@ -9,8 +9,8 @@ from skimage import io
 
 
 class AlignedDataset(BaseDataset):
-    def initialize(self, opt):
-        self.opt = opt
+    def __init__(self, opt):
+        super().__init__(opt)
         self.root = opt.dataroot
         self.dir_AB = os.path.join(opt.dataroot, opt.phase)
         self.AB_paths = sorted(make_dataset(self.dir_AB))

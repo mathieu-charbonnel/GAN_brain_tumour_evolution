@@ -6,35 +6,22 @@ from data.base_data_loader import BaseDataLoader
 from data.base_dataset import BaseDataset
 
 
+class FakeOpt:
+    pass
+
+
 class TestBaseDataLoader:
-    def test_init(self):
-        loader = BaseDataLoader()
-        assert loader is not None
+    def test_init_stores_opt(self):
+        opt = FakeOpt()
+        loader = BaseDataLoader(opt)
+        assert loader.opt is opt
 
     def test_load_data_returns_none(self):
-        loader = BaseDataLoader()
+        loader = BaseDataLoader(FakeOpt())
         assert loader.load_data() is None
-
-    def test_initialize_stores_opt(self):
-        loader = BaseDataLoader()
-
-        class FakeOpt:
-            pass
-
-        opt = FakeOpt()
-        loader.initialize(opt)
-        assert loader.opt is opt
 
 
 class TestBaseDataset:
     def test_name(self):
-        dataset = BaseDataset()
+        dataset = BaseDataset(FakeOpt())
         assert dataset.name() == 'BaseDataset'
-
-    def test_initialize_no_error(self):
-        dataset = BaseDataset()
-
-        class FakeOpt:
-            pass
-
-        dataset.initialize(FakeOpt())

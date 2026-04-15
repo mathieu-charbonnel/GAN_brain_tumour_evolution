@@ -14,12 +14,12 @@ class GeaGanModelTPN(BaseGanModel):
     def name(self):
         return 'GeaGanModelTPN'
 
-    def initialize(self, opt):
+    def __init__(self, opt):
         self.TPN_enabled = bool(opt.TPN)
         if self.TPN_enabled:
             opt.which_model_netG = 'unet_128_TPN'
 
-        super().initialize(opt)
+        super().__init__(opt)
 
         if self.isTrain and self.TPN_enabled:
             # Store final gamma value and then set it to 0
@@ -39,8 +39,7 @@ class GeaGanModelTPN(BaseGanModel):
             opt_TPN.display_id = -1
             opt_TPN.isTrain = False
             print("Options TPN: {}\n\n".format(opt_TPN))
-            self.TPN = TimePredictorModel()
-            self.TPN.initialize(opt_TPN)
+            self.TPN = TimePredictorModel(opt_TPN)
             self.TPN.load_network(self.TPN.netDt, 'Dt', epoch_label=200)
 
     def _compute_d_channel(self, opt):

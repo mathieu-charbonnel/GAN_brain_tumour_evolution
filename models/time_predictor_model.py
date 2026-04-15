@@ -10,9 +10,8 @@ class TimePredictorModel(BaseModel):
     def name(self):
         return 'TimePredictorModel'
 
-    def initialize(self, opt):
-        BaseModel.initialize(self, opt)
-        self.isTrain = opt.isTrain
+    def __init__(self, opt):
+        super().__init__(opt)
         self.batchSize = opt.batchSize
         self.fineSize = opt.fineSize
         input_channel_size = opt.input_nc

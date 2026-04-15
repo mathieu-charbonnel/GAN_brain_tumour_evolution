@@ -10,9 +10,9 @@ class GeaGanModelDM(BaseGanModel):
     def name(self):
         return 'GeaGanModelDM'
 
-    def initialize(self, opt):
+    def __init__(self, opt):
         opt.which_model_netG = 'unet_128_TPN'
-        super().initialize(opt)
+        super().__init__(opt)
 
     def _compute_d_channel(self, opt):
         # +1 for the time layer channel

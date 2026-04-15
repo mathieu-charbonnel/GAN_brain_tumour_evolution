@@ -19,9 +19,8 @@ def CreateDataset(opt):
     dataset_cls = _DATASET_MAP.get(opt.dataset_mode)
     if dataset_cls is None:
         raise ValueError("Dataset mode [%s] not recognized." % opt.dataset_mode)
-    dataset = dataset_cls()
+    dataset = dataset_cls(opt)
     print("dataset [%s] was created" % (dataset.name()))
-    dataset.initialize(opt)
     return dataset
 
 
@@ -29,8 +28,8 @@ class CustomDatasetDataLoader(BaseDataLoader):
     def name(self):
         return 'CustomDatasetDataLoader'
 
-    def initialize(self, opt):
-        BaseDataLoader.initialize(self, opt)
+    def __init__(self, opt):
+        super().__init__(opt)
         self.dataset = CreateDataset(opt)
         self.dataloader = torch.utils.data.DataLoader(
             self.dataset,

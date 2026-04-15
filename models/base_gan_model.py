@@ -9,9 +9,8 @@ from . import networks
 
 
 class BaseGanModel(BaseModel):
-    def initialize(self, opt):
-        BaseModel.initialize(self, opt)
-        self.isTrain = opt.isTrain
+    def __init__(self, opt):
+        super().__init__(opt)
         self.batchSize = opt.batchSize
         self.fineSize = opt.fineSize
 
